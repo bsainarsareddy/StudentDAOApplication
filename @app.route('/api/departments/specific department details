@@ -1,0 +1,10 @@
+@app.route('/api/departments/<int:dept_id>')
+def get_department(dept_id):
+    conn = get_db_connection()
+    department = conn.execute('SELECT * FROM departments WHERE id = ?', (dept_id,)).fetchone()
+    conn.close()
+
+    if department is None:
+        return jsonify({'error': 'Department not found'}), 404
+
+    return jsonify(dict(department))
