@@ -1,0 +1,12 @@
+@app.route('/api/departments')
+def get_departments():
+    conn = get_db_connection()
+    departments = conn.execute('''
+        SELECT d.id, d.name, COUNT(p.id) AS product_count
+        FROM departments d
+        LEFT JOIN products p ON d.id = p.department_id
+        GROUP BY d.id
+    ''').fetchall()
+    conn.close()
+
+    return jsonify([dict(dept) for dept in departments])
